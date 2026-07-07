@@ -1,5 +1,5 @@
 ---------------------------------------------------------
--- Generate 100 Bookings
+-- Generate 100 Hotel Bookings
 ---------------------------------------------------------
 
 INSERT INTO hotel_bookings
@@ -49,3 +49,43 @@ ARRAY[
 NOW() - ((random()*60)::INT || ' days')::INTERVAL
 
 FROM generate_series(1,100) gs;
+
+---------------------------------------------------------
+-- Generate Booking Events
+---------------------------------------------------------
+
+INSERT INTO booking_events
+(
+    booking_id,
+    event_type,
+    payload,
+    created_at
+)
+
+SELECT
+
+id,
+
+(
+ARRAY[
+'BOOKED',
+'PAYMENT_SUCCESS',
+'CHECKIN',
+'CHECKOUT',
+'CANCELLED'
+]
+)[floor(random()*5+1)],
+
+jsonb_build_object(
+
+'source','seed-script',
+
+'remarks','Automatically generated'
+
+),
+
+created_at
+
+FROM hotel_bookings
+
+LIMIT 60;
