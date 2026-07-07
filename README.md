@@ -1,3 +1,6 @@
+# Full Project Structure
+
+```text
 terraform-db-reliability/
 │
 ├── .github/
@@ -65,7 +68,7 @@ terraform-db-reliability/
 ├── README.md
 ├── .gitignore
 └── Makefile
-
+```
 
 # Terraform + Database Reliability Assessment
 
