@@ -6,16 +6,26 @@ on:
       - main
       - master
 
+  push:
+    branches:
+      - main
+      - master
+
   workflow_dispatch:
 
 jobs:
   terraform:
-    name: Terraform Validation
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        environment:
+          - dev
+          - prod
 
     defaults:
       run:
-        working-directory: infra/envs/dev
+        working-directory: infra/envs/${{ matrix.environment }}
 
     steps:
       - name: Checkout Repository
@@ -45,8 +55,8 @@ jobs:
       - name: Save Terraform Plan
         run: terraform show -no-color tfplan > terraform-plan.txt
 
-      - name: Upload Plan Artifact
+      - name: Upload Terraform Plan
         uses: actions/upload-artifact@v4
         with:
-          name: terraform-plan
-          path: infra/envs/dev/terraform-plan.txt
+          name: terraform-plan-${{ matrix.environment }}
+          path: infra/envs/${{ matrix.environment }}/terraform-plan.txt

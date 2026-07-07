@@ -4,7 +4,7 @@ module "network" {
   source = "../../modules/network"
 
   project_name = var.project_name
-  environment = var.environment
+  environment  = var.environment
 
   vpc_cidr = var.vpc_cidr
 
@@ -24,7 +24,7 @@ module "ecs" {
   source = "../../modules/ecs"
 
   project_name = var.project_name
-  environment = var.environment
+  environment  = var.environment
 
   vpc_id = module.network.vpc_id
 

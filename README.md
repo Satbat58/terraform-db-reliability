@@ -483,11 +483,16 @@ If this infrastructure were deployed in production, the following enhancements w
 
 All requested requirements for the assessment have been implemented.
 
+cd infra/envs/prod
+--terraform init -reconfigure
+terraform fmt -recursive
+terraform validate
+terraform plan -refresh=false
 
 docker compose up -d
-docker ps
+--docker ps
 docker exec -it hotel-postgres psql -U postgres -d hotel
 \dt
 SELECT COUNT(*) FROM hotel_bookings;
 SELECT COUNT(*) FROM booking_events;
-docker compose down -v
+--docker compose down -v

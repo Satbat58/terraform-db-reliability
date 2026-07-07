@@ -31,7 +31,7 @@ memory = 1024
 
 desired_count = 2
 
-execution_role_arn = "arn:aws:iam::<ACCOUNT_ID>:role/ecsTaskExecutionRole"
+execution_role_arn = "arn:aws:iam::194722408310:role/ecsTaskExecutionRole"
 
 db_name = "hotel"
 
