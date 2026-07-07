@@ -1,12 +1,12 @@
 name: Terraform Validation
 
 on:
-  pull_request:
+  push:
     branches:
       - main
       - master
 
-  push:
+  pull_request:
     branches:
       - main
       - master
@@ -15,6 +15,7 @@ on:
 
 jobs:
   terraform:
+    name: Terraform (${{ matrix.environment }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,6 +27,11 @@ jobs:
     defaults:
       run:
         working-directory: infra/envs/${{ matrix.environment }}
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ap-south-1
 
     steps:
       - name: Checkout Repository
@@ -40,19 +46,15 @@ jobs:
         run: terraform fmt -recursive -check
 
       - name: Terraform Init
-        run: terraform init -backend=false
+        run: terraform init -reconfigure
 
       - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Plan
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ap-south-1
         run: terraform plan -refresh=false -no-color -out=tfplan
 
-      - name: Save Terraform Plan
+      - name: Export Terraform Plan
         run: terraform show -no-color tfplan > terraform-plan.txt
 
       - name: Upload Terraform Plan
